@@ -19,7 +19,7 @@ int main (){
     cin >> x;
 
     if (x == 5){
-        cout << "\033[2J\033[H";
+        cout << "\033[2J\033[3J\033[H";
         cout << "Cleared" << endl;
     }
 
