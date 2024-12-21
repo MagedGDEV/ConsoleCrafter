@@ -30,3 +30,6 @@
 *.exe
 *.out
 *.app
+
+# Issues
+issue.md
