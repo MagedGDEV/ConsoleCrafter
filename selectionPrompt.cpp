@@ -18,6 +18,7 @@ void setRawMode(bool enable) {
     } else {
         tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restore original attributes
     }
+    
 }
 
 
@@ -26,7 +27,7 @@ char getCommand(){
     char key = getchar(); // Read a single character
 
     if (key == '\n') { // Enter key
-        std::cout << "Enter key pressed!" << std::endl;
+        return key;
     } else if (key == '\033') { // Escape sequence for arrow keys
         getchar(); // Skip the '['
         key = getchar();
@@ -41,7 +42,10 @@ char getCommand(){
 
 int main (){
 
-    vector<string> food {"Pizza", "Burger", "Pasta", "Chicken"};
+    cout << "\033[2J\033[3J\033[H";
+    cout << "Man \n Man\n Man\n Man\n Man\n Man\n";
+
+    vector<string> food {"Pizza", "Burger", "Pasta", "Chicken", "Meat"};
 
     string styleStart = "\033[31m";
     string styleEnd = "\033[0m";
@@ -49,7 +53,8 @@ int main (){
     int selectedIndex = 0;
 
     setRawMode(true);
-    cout << "\033[2J\033[3J\033[H";
+    std::cout << "\033[s"; 
+    
     do {
         cout << "Which food do you prefer the most?" << endl;
         for (size_t i = 0; i < food.size(); i++){
@@ -60,13 +65,18 @@ int main (){
                 cout << "  " << food[i] << endl;
             }
         }
-        cout << "\033[?25l\033[0m";
+        cout << "\033[?25l\033[0m"; // hide cursor
         char key = getCommand();
         while (key == '\0')
             key = getCommand();
 
         if (key == '\n'){
-            cout << "\033[2J\033[3J\033[H";
+            // delete the selections and the question
+            // return the selected item/index in the vector
+            std::cout << "\033[u";
+            cout << "\033[J";
+            setRawMode(false);
+            cout << "\033[?25h\033[0m"; // view cursor again
             break;
         }
         else if (key == 'A'){
@@ -81,16 +91,11 @@ int main (){
             else 
                 selectedIndex++;
         }
-        cout << "\033[2J\033[3J\033[H"; // clear terminal
+        //cout << "\033[" << food.size() << "A"; // move the cursor up according to the size of the vector
+        std::cout << "\033[u";
+        cout << "\033[J"; // clear everything from the current position till the end of the screen
     } while (true);
-    cout << "\033[?25h\033[0m";
     
-    cout << "\033[32m You choose " << food[selectedIndex] << styleEnd << endl << endl;
-
-    setRawMode(false);
-
-
+    cout << "\033[32m \n \n You choose " << food[selectedIndex] << styleEnd << endl << endl;
     return 0;
 }
-
-

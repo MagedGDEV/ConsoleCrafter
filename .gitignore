@@ -36,3 +36,4 @@ issue.md
 
 # Text Editor
 .vscode
+.DS_Store
