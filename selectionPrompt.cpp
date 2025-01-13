@@ -51,7 +51,7 @@ int main (){
     int selectedIndex = 0;
 
     setRawMode(true);
-    std::cout << "\033[s"; 
+    std::cout << "\0337"; 
     
     do {
         cout << "Which food do you prefer the most?" << endl;
@@ -71,7 +71,7 @@ int main (){
         if (key == '\n'){
             // delete the selections and the question
             // return the selected item/index in the vector
-            std::cout << "\033[u";
+            std::cout << "\0338";
             cout << "\033[J";
             setRawMode(false);
             cout << "\033[?25h\033[0m"; // view cursor again
@@ -90,7 +90,7 @@ int main (){
                 selectedIndex++;
         }
         //cout << "\033[" << food.size() << "A"; // move the cursor up according to the size of the vector
-        std::cout << "\033[u";
+        std::cout << "\0338";
         cout << "\033[J"; // clear everything from the current position till the end of the screen
     } while (true);
     
