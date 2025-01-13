@@ -43,8 +43,6 @@ char getCommand(){
 int main (){
 
     cout << "\033[2J\033[3J\033[H";
-    cout << "Man \n Man\n Man\n Man\n Man\n Man\n";
-
     vector<string> food {"Pizza", "Burger", "Pasta", "Chicken", "Meat"};
 
     string styleStart = "\033[31m";
@@ -59,7 +57,7 @@ int main (){
         cout << "Which food do you prefer the most?" << endl;
         for (size_t i = 0; i < food.size(); i++){
             if (selectedIndex == i){
-                cout << styleStart << "> " << food[i] << styleEnd << endl;
+                cout << styleStart << " > " << food[i] << styleEnd << endl;
             }
             else {
                 cout << "  " << food[i] << endl;
