@@ -54,7 +54,7 @@ int main (){
     int selectedIndex = 0;
 
     setRawMode(true);
-    std::cout << "\033[s"; // save position of the cursor
+    std::cout << "\0337"; // save position of the cursor
     
     do {
         cout << "Which food do to have in your meal?" << endl;
@@ -79,7 +79,7 @@ int main (){
         if (key == '\n'){
             // delete the selections and the question
             // return the selected item/index in the vector
-            std::cout << "\033[u";
+            std::cout << "\0338";
             cout << "\033[J";
             setRawMode(false);
             cout << "\033[?25h\033[0m"; // view cursor again
@@ -101,7 +101,7 @@ int main (){
                 selectedIndex++;
         }
 
-        std::cout << "\033[u";
+        std::cout << "\0338";
         cout << "\033[J"; // clear everything from the current position till the end of the screen
     } while (true);
     
