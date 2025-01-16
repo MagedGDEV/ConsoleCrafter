@@ -180,7 +180,8 @@ int main (){
         cout << styleEnd << endl << endl;
     }
     else
-        cout << "\033[33m \n \n You didnot choose anything";
+        cout << "\033[33m \n \n You didnot choose anything" << styleEnd << endl << endl;
+        
 		
     return 0;
 }
