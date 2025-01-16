@@ -1,8 +1,14 @@
 #include <iostream>
-#include <termios.h>
-#include <unistd.h>
 #include <string>
 #include <vector>
+
+#ifdef _WIN32
+    #include <windows.h>
+    #include <conio.h>
+#else 
+    #include <termios.h>
+    #include <unistd.h>
+#endif
 
 using std::cin;
 using std::cout;
@@ -11,39 +17,93 @@ using std::vector;
 using std::string;
 using std::pair;
 
-void setRawMode(bool enable) {
-    static struct termios oldt, newt;
+#ifdef _WIN32
+    // Define ENABLE_VIRTUAL_TERMINAL_PROCESSING if not already defined
+    #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+    #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+    #endif
 
-    if (enable) {
-        tcgetattr(STDIN_FILENO, &oldt); // Get current terminal attributes
-        newt = oldt;                    // Copy them to modify
-        newt.c_lflag &= ~(ICANON | ECHO); // Disable canonical mode and echo
-        tcsetattr(STDIN_FILENO, TCSANOW, &newt); // Apply changes immediately
-    } else {
-        tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restore original attributes
+    void enableANSI() {
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hOut == INVALID_HANDLE_VALUE) return;
+
+        DWORD dwMode = 0;
+        if (!GetConsoleMode(hOut, &dwMode)) return;
+
+        dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        if (!SetConsoleMode(hOut, dwMode)) return;
     }
-    
+
+#endif
+
+void setRawMode(bool enable) {
+    #ifdef _WIN32
+        static DWORD oldM, newM;
+        HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+        if (enable){
+            GetConsoleMode(hStdin, &oldM);
+            newM = oldM & ~(ENABLE_LINE_INPUT | ENABLE_ECHO_INPUT);
+            SetConsoleMode(hStdin, newM);
+        } else {
+            SetConsoleMode(hStdin, oldM);
+        }   
+
+    #else
+        static struct termios oldt, newt;
+
+        if (enable) {
+            tcgetattr(STDIN_FILENO, &oldt); // Get current terminal attributes
+            newt = oldt;                    // Copy them to modify
+            newt.c_lflag &= ~(ICANON | ECHO); // Disable canonical mode and echo
+            tcsetattr(STDIN_FILENO, TCSANOW, &newt); // Apply changes immediately
+        } else {
+            tcsetattr(STDIN_FILENO, TCSANOW, &oldt); // Restore original attributes
+        }
+    #endif
 }
 
 char getCommand(){
 
-    char key = getchar(); // Read a single character
+    #ifdef _WIN32
+        int key = _getch();
+        if (key == 3) // Ctrl+C - Exit program
+            exit(0);
+        else if (key == 13) // Enter key
+            return '\n'; 
+        else if (key == 32) // Space key
+            return ' ';
+        else if (key == 0 || key == 224) { // Arrow keys are a two-part code
+            key = _getch(); // Get the second part
+            switch (key) {
+                case 72: return 'A';
+                case 80: return 'B';
+                default: return '\0';
+            }
+        }
+        return '\0';
+    #else
+        char key = getchar(); // Read a single character
 
-    if (key == '\n' || key == ' ') { // Enter key
-        return key;
-    } else if (key == '\033') { // Escape sequence for arrow keys
-        getchar(); // Skip the '['
-        key = getchar();
-        if (key != 'A' && key != 'B')
+        if (key == '\n' || key == ' ') { // Enter key
+            return key;
+        } else if (key == '\033') { // Escape sequence for arrow keys
+            getchar(); // Skip the '['
+            key = getchar();
+            if (key != 'A' && key != 'B')
+                key = '\0';
+        } else {
             key = '\0';
-    } else {
-        key = '\0';
-    }
-    return key;
+        }
+        return key;
+    #endif
+    
 }
 
 int main (){
 
+    #ifdef _WIN32
+        enableANSI();
+    #endif
     cout << "\033[2J\033[3J\033[H";
 
     vector<pair<string, bool>> food {{"Pizza", false} , {"Burger", false}, {"Pasta",false}, {"Chicken", false}, {"Meat", false}};
