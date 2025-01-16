@@ -2,8 +2,32 @@
 using std::cout;
 using std::endl;
 
+#ifdef _WIN32
+
+    #include <windows.h>
+    // Define ENABLE_VIRTUAL_TERMINAL_PROCESSING if not already defined
+    #ifndef ENABLE_VIRTUAL_TERMINAL_PROCESSING
+    #define ENABLE_VIRTUAL_TERMINAL_PROCESSING 0x0004
+    #endif
+
+    void enableANSI() {
+        HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
+        if (hOut == INVALID_HANDLE_VALUE) return;
+
+        DWORD dwMode = 0;
+        if (!GetConsoleMode(hOut, &dwMode)) return;
+
+        dwMode |= ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+        if (!SetConsoleMode(hOut, dwMode)) return;
+    }
+
+#endif
+
 int main (){
 	
+	#ifdef _WIN32
+        enableANSI();
+    #endif
 	
 	// Fixed colors
 	// Black, red, green, yellow, blue, magenta, cyan, white, default, reset
