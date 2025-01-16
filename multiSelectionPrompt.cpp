@@ -170,14 +170,17 @@ int main (){
 	for (size_t i = 0; i < food.size(); i++)
 		if (food[i].second)
 			foodSelected.push_back(food[i].first);
-    cout << "\033[33m \n \n You choose ";
-    for (size_t i = 0; i < foodSelected.size(); i++){
-		cout << foodSelected[i];
-		if ( i != foodSelected.size() - 1)
-			cout << ", ";
-			
-	}
-	cout << styleEnd << endl << endl;
+    if (foodSelected.size() != 0){
+        cout << "\033[33m \n \n You choose ";
+        for (size_t i = 0; i < foodSelected.size(); i++){
+            cout << foodSelected[i];
+            if ( i != foodSelected.size() - 1)
+                cout << ", ";
+        }
+        cout << styleEnd << endl << endl;
+    }
+    else
+        cout << "\033[33m \n \n You didnot choose anything";
 		
     return 0;
 }
