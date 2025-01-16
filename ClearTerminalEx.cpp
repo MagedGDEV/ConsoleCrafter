@@ -25,7 +25,7 @@ using std::cin;
 
 #endif
 
-// Example: Clearing console using ASCII Escape codes
+// Example: Clearing console using ANSI Escape codes
 // This should works Cross-Platfrom
 
 int main (){
