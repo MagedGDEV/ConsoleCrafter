@@ -117,7 +117,7 @@ int main (){
     std::cout << "\0337"; // save position of the cursor
     
     do {
-        cout << "Which food do to have in your meal?" << endl;
+        cout << "Which food do you like?" << endl;
         for (size_t i = 0; i < food.size(); i++){
 			if (selectedIndex == i){
 				cout << styleSelection << ((food[i].second) ? " -[x] " : " -[ ] ") << food[i].first << styleEnd << endl;
