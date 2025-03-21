@@ -43,4 +43,4 @@ CMakeFiles
 CMakeCache.txt
 cmake_install.cmake
 Makefile
-build # generated when build is done with vscode
+build
