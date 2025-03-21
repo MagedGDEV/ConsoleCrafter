@@ -37,3 +37,9 @@ issue.md
 # Text Editor
 .vscode
 .DS_Store
+
+# CMAKE files
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+Makefile
