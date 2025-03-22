@@ -2,14 +2,13 @@
 #define _COLOR_H_
 
 #include "../ansi_formatter/ansi_formatter.hpp"
+#include "ColorCode.hpp"
 
 struct RGB{
     int r, g, b;
+    RGB(int red, int green, int blue): r{red}, g{green}, b{blue} {}
 };
 
-enum ColorCode {
-    RED = 31,
-};
 
 class Color : public AnsiFormatter {
     friend std::ostream& operator<<(std::ostream &os, const Color &obj);

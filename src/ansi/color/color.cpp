@@ -17,7 +17,8 @@ void Color::setColor(RGB color, bool isBackground){
     ANSI_CODE += "m";
 }
 void Color::setColor(int code, bool isBackground){
-    ANSI_CODE = "\033[" + std::to_string(isBackground ? code + 10 : code);
+    ANSI_CODE = "\033[";
+    ANSI_CODE += (isBackground ? "48;5;":"38;5;") + std::to_string(code);
     ANSI_CODE += "m";
 }
 

@@ -1,8 +1,10 @@
 #include <iostream>
 #include "ansi/color/color.hpp"
 
+
 int main(){
 
-    std::cout << Color(ColorCode::RED) << "Hello World in style" << std::endl;
+    int count {0};
+    std:: cout << Color(Olive) << "Hello World" << std::endl;
     return 0;
 }
